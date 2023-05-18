@@ -37,7 +37,13 @@ async function run() {
         if (req.query?.email) {
             query = { email: req.query.email }
         }
-        const result = await toyCollection.find(query).limit(20).toArray();
+        let sortOptions ={};
+        if (req.query?.price) {
+            sortOptions = { price: req.query.price }
+        }
+        
+        // sortOptions = { price: req.query.price }
+        const result = await toyCollection.find(query).sort({ price: req.query?.price }).toArray();
         res.send(result);
     })
 
@@ -50,12 +56,6 @@ async function run() {
 
     app.get('/filter/:category', async(req, res)=>{
         const result = await toyCollection.find({category: req.params.category,}).toArray();
-        res.send(result);
-    })
-    app.get('/sort/:value', async(req, res)=>{
-        const value = req.params.value;
-        const sortOptions = { price: value };
-        const result = await toyCollection.find().sort(sortOptions).toArray();
         res.send(result);
     })
 
