@@ -49,14 +49,11 @@ async function run() {
     })
 
     app.get('/filter/:category', async(req, res)=>{
-        // const catagory = req.params.category;
-        // const query = { category: req.params.category }
         const result = await toyCollection.find({category: req.params.category,}).toArray();
         res.send(result);
     })
 
     app.post('/toys', async(req, res)=>{
-        console.log(req.body);
         const toy = req.body;
         const result = await toyCollection.insertOne(toy);
         res.send(result);
