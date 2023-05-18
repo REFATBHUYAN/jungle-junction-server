@@ -52,6 +52,12 @@ async function run() {
         const result = await toyCollection.find({category: req.params.category,}).toArray();
         res.send(result);
     })
+    app.get('/sort/:value', async(req, res)=>{
+        const value = req.params.value;
+        const sortOptions = { price: value };
+        const result = await toyCollection.find().sort(sortOptions).toArray();
+        res.send(result);
+    })
 
     app.post('/toys', async(req, res)=>{
         const toy = req.body;
