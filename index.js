@@ -47,12 +47,13 @@ async function run() {
         const result = await toyCollection.findOne(query);
         res.send(result);
     })
-    // app.get('/toys', async(req, res)=>{
-    //     // const id = req.params.id;
-       
-    //     const result = await toyCollection.find(query).toArray();
-    //     res.send(result);
-    // })
+
+    app.get('/toys/:category', async(req, res)=>{
+        const catagory = req.params.category;
+        const query = { category: req.params.category }
+        const result = await toyCollection.find(query);
+        res.send(result);
+    })
 
     app.post('/toys', async(req, res)=>{
         console.log(req.body);
