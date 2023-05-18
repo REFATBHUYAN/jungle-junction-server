@@ -48,10 +48,10 @@ async function run() {
         res.send(result);
     })
 
-    app.get('/toys/:category', async(req, res)=>{
-        const catagory = req.params.category;
-        const query = { category: req.params.category }
-        const result = await toyCollection.find(query);
+    app.get('/filter/:category', async(req, res)=>{
+        // const catagory = req.params.category;
+        // const query = { category: req.params.category }
+        const result = await toyCollection.find({category: req.params.category,}).toArray();
         res.send(result);
     })
 
