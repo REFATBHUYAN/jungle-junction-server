@@ -36,6 +36,10 @@ async function run() {
         const result = await toyCollection.find().limit(20).toArray();
         res.send(result);
     })
+    app.get('/filter/:category', async(req, res)=>{
+        const result = await toyCollection.find({category: req.params.category,}).toArray();
+        res.send(result);
+    })
     app.get('/alltoys', async(req, res)=>{
         const sortValue = req.query?.sort;
         // console.log(sortValue);
@@ -44,15 +48,15 @@ async function run() {
             query = { email: req.query.email }
         }
         const val = sortValue === 'dese' ? -1 : 1 ;
-        console.log(val);
-        const converter = await toyCollection.aggregate([
-            { $addFields: { priceNumeric: { $toDouble: '$price' } } },
-            { $out: 'toys' }
-          ]).toArray();
+        // console.log(val);
+        // const converter = await toyCollection.aggregate([
+        //     { $addFields: { priceNumeric: { $toDouble: '$price' } } },
+        //     { $out: 'toys' }
+        //   ]).toArray();
 
         
-        const result = await toyCollection.find(query).sort({priceNumeric: val}).toArray();
-        // const result = await toyCollection.find(query).sort({price: val}).toArray();
+        // const result = await toyCollection.find(query).sort({priceNumeric: val}).toArray();
+        const result = await toyCollection.find(query).sort({price: val}).toArray();
         
         res.send(result);
     })
@@ -69,10 +73,7 @@ async function run() {
         res.send(result);
     })
 
-    app.get('/filter/:category', async(req, res)=>{
-        const result = await toyCollection.find({category: req.params.category,}).toArray();
-        res.send(result);
-    })
+    
 
     app.post('/toys', async(req, res)=>{
         const toy = req.body;
