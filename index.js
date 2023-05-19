@@ -33,19 +33,30 @@ async function run() {
      const toyCollection = client.db('toyShop').collection('toys');
     //  
     app.get('/toys', async(req, res)=>{
+        const result = await toyCollection.find().limit(20).toArray();
+        res.send(result);
+    })
+    app.get('/alltoys', async(req, res)=>{
+        const sortValue = req.query?.sort;
+        // console.log(sortValue);
         let query = {};
         if (req.query?.email) {
             query = { email: req.query.email }
         }
-        let sortOptions ={};
-        if (req.query?.price) {
-            sortOptions = { price: req.query.price }
-        }
+        const val = sortValue === 'dese' ? -1 : 1 ;
+        console.log(val);
+        const converter = await toyCollection.aggregate([
+            { $addFields: { priceNumeric: { $toDouble: '$price' } } },
+            { $out: 'toys' }
+          ]).toArray();
+
         
-        // sortOptions = { price: req.query.price }
-        const result = await toyCollection.find(query).sort({ price: req.query?.price }).limit(20).toArray();
+        const result = await toyCollection.find(query).sort({priceNumeric: val}).toArray();
+        // const result = await toyCollection.find(query).sort({price: val}).toArray();
+        
         res.send(result);
     })
+    
     app.get('/search/:title', async(req,res)=>{
         const result = await toyCollection.find({toyName: {$regex: req.params.title, $options: 'i'}}).toArray();
         res.send(result);
