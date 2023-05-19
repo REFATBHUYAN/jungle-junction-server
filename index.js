@@ -43,7 +43,11 @@ async function run() {
         }
         
         // sortOptions = { price: req.query.price }
-        const result = await toyCollection.find(query).sort({ price: req.query?.price }).toArray();
+        const result = await toyCollection.find(query).sort({ price: req.query?.price }).limit(20).toArray();
+        res.send(result);
+    })
+    app.get('/search/:title', async(req,res)=>{
+        const result = await toyCollection.find({toyName: {$regex: req.params.title, $options: 'i'}}).toArray();
         res.send(result);
     })
 
